@@ -1,0 +1,131 @@
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+<% javascript_include_tag 'tags.js' %>
+
+<%= form_tag({controller: :dogs, action: @action}, method: @method, :multipart => true) do %>
+<div class="ui form">  
+
+  <div class="field"><label>Name</label>
+    <%= text_field(:dog, :name) %>
+  </div>
+
+  <div class="field"><label>Change Avatar</label>
+    <% if @dog.photo.file? %>
+      <%= image_tag @dog.photo.url(:small) %>
+    <% else %>
+      <%= image_tag "default_dog.jpg" %>
+    <% end %>
+    <%= file_field(:dog, :photo) %>
+  </div>
+
+  <div class="field"><label>Delete Pictures</label></div>
+  <% unless @pictures.empty? %>
+    <% @pictures.each do |pic| %>
+      <div class="delete-pics">
+       <%= image_tag pic.image.url(:small) %>
+      
+        <%= hidden_field_tag('seen[]', pic.id) -%>
+        <%= check_box_tag 'activated[]', pic.id -%>        
+      </div>
+    <% end %>
+  <% end %>
+
+<input type="checkbox" name="checkboxG6" id="checkboxG6" class="css-checkbox" />
+
+
+  <div class="field"><label>Add More Pictures</label>
+    <%= file_field_tag "images[]", type: :file, multiple: true %>
+  </div>
+
+  <div class="field"><label>Video</label>
+   Please enter a Youtube link.
+    <%= text_field(:dog, :video, :placeholder => "https://www.youtube.com/watch?v=NONlkKMGFeA") %>
+
+  <div class="field"><label>Birthdate</label>
+    <%= date_select :dog, :dob, {:start_year => Date.today.year - 30, :end_year => Date.today.year, :default => DateTime.new(Date.today.year, 1, 1)} %>
+  </div>
+
+  <div class="field"><label>Gender</label>
+    <%= select :dog, :gender, ["Male", "Female"] %>
+  </div>
+
+  <div class="field"><label>Mix</label>
+    <%= text_field :dog, :mixes, :value => @form_filler.values[:mix].join(", ") %>
+  </div>
+
+  <div class="field"><label>Size</label>
+    <% size_options = options_from_collection_for_select(Size.all, 'id', 'value', @form_filler.values[:size]) %>
+    <%= select :dog, :size, size_options %> 
+  </div>
+
+  <div class="field"><label>Personality</label>
+    <div class="ui buttons">
+    <% Personality.all_values.each do |p| %> 
+        <% @form_filler.values[:personality].include?(p) ? bool = true : bool = false %>
+        <div class="ui button">
+        <%= check_box_tag "dog[personalities[#{p}]]", 1, bool, :class => "check" %>
+        <%= label(:personalities, p.tr(" ", "_"), p) %>
+        </div>
+    <% end %>
+    </div>
+  </div>
+
+
+  <div class="field"><label>Energy Level</label>
+    <% energy_options = options_from_collection_for_select(EnergyLevel.all, 'id', 'value', @form_filler.values[:energy_level]) %>
+    <%= select :dog, :energy_level, energy_options %>
+  </div>
+  
+  <div class="field"><label>Likes</label>
+    <div class="ui buttons">
+    <% Like.all_values.each do |like| %> 
+        <div class="ui button">
+        <% @form_filler.values[:like].include?(like) ? bool = true : bool = false %>
+        <%= check_box_tag "dog[likes[#{like}]]", 1, bool, :class => "check" %>
+        <%= label(:likes, like.tr(" ", "_"), like) %>
+        </div>
+    <% end %>
+    </div>
+  </div>
+
+  <div class="field"><label>Motto</label>
+    <%= text_field(:dog, :motto) %>
+  </div>
+
+
+  <div class="field"><label>Description</label>
+    <%= text_area(:dog, :description) %>
+  </div>
+
+  <div class="field"><label>Health Notes</label>
+    <%= text_area(:dog, :health, :placeholder => "Is there anything sitters should know about your dog's health (allergies, recent surgeries, etc.)?") %>
+  </div>
+
+  <div class="field"><label>Is Your Dog Spayed/Neutered?</label>
+    <%= label :fixed, "Yes", :value => "true"  %>
+    <%= radio_button :dog, :fixed, true, :checked => true %>
+    <%= label :fixed, "No", :value => "false" %>
+    <%= radio_button :dog, :fixed, false  %>
+  </div>
+
+  <div class="field"><label>Availability</label>
+    <%=text_area(:dog, :availability, :placeholder => "Tell us when you would like a sitter") %>
+  </div>
+
+
+
+<!-- IMAGE UPLOADING -->
+
+
+  <% end %>
+
+<div class="field"><label>
+
+
+  <div class="ui primary button transparent input"><input id='update_dog_button' type="submit" value="Save Changes" name="update_dog_button" class='btn info' style="text-align:center" /></div>
+
+
+  <%= button_to "Cancel", root_path(:notice => ""), :id => "cancel_dog_button", :class => "ui button transparent input", :method => :get %>
+
+  </div>
+
+</div>
