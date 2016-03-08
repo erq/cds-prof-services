@@ -13,7 +13,7 @@ class DogViewHelper
     @values[:energy_level] = index ? [] : 1
     @values[:size] = index ? [] : 1
     @values[:radius] = DEFAULT_RADIUS
-    @values[:zipcode] = current_user ? current_user.zipcode : ip_zipcode
+    # @values[:zipcode] = current_user ? current_user.zipcode : ip_zipcode
     @values[:personality] = []
     @values[:like] = []
   end
@@ -30,15 +30,15 @@ class DogViewHelper
     @values[criteria] = selected[criteria].keys if selected[criteria]
   end
 
-  def update_zipcode(selected, ip_zipcode, current_user)
-    if selected[:zipcode] # Set from Params first
-      @values[:zipcode] = selected[:zipcode]
-    elsif current_user and current_user.zipcode # Next default to current user's zipcode
-      @values[:zipcode] = current_user.zipcode
-    else # Otherwise IP address zipcode
-      @values[:zipcode] = ip_zipcode
-    end
-  end
+  # def update_zipcode(selected, ip_zipcode, current_user)
+  #   if selected[:zipcode] # Set from Params first
+  #     @values[:zipcode] = selected[:zipcode]
+  #   elsif current_user and current_user.zipcode # Next default to current user's zipcode
+  #     @values[:zipcode] = current_user.zipcode
+  #   else # Otherwise IP address zipcode
+  #     @values[:zipcode] = ip_zipcode
+  #   end
+  # end
 
   def attributes_list(dog_attributes)
     # Set form fields with new dog's information
